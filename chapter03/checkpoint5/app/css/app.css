@@ -1,0 +1,207 @@
+/* app css stylesheet */
+
+html{
+    height:100%;
+}
+
+body {
+    padding-top: 70px;
+    padding-bottom: 20px;
+    min-height: 100%;
+    font-size: 13px;
+    font-family: 'Roboto Slab';
+    font-style: normal;
+    font-weight: 400;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/* styles for validation helpers - start*/
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+/* styles for validation helpers - end */
+
+/*styles for top nav bar - start*/
+.navbar-default.top-navbar {
+    background-color: #4eaded;
+    border-color: #4eaded;
+}
+
+.navbar-default.top-navbar h1 {
+    color: white;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+/*styles for top nav bar - end*/
+
+/*styles for container - start*/
+.container.app-container{
+    width:100%;
+    max-width:100%;
+}
+.workout-display-div{
+    text-align:center;
+    padding:40px;
+}
+.workout-display-div .img-responsive{
+    margin: 25px auto;
+    width:540px;
+    height:360px;
+    cursor:pointer;
+}
+.workout-display-div .time-progress{
+    margin-top:40px;
+}
+/*styles for container - end*/
+
+/*Styles for start page - start*/
+.text-center{
+    color:#4eaded;
+}
+#start{
+    text-align:center;
+    margin-top:25px;
+}
+#start a {
+    text-decoration: none;
+    font-size: 67px;
+    color:#4eaded;
+}
+#start a:hover{
+    color:#4eaded;
+}
+#start a .glyphicon {
+    top:8px;
+}
+/*Styles for start page - end*/
+
+/*Styles for workout page - start*/
+.workout-app-container{
+    padding-top:15px;
+}
+
+#video-panel .panel-body{
+    max-height:650px;
+    overflow:auto;
+}
+#pause-overlay {
+    position:absolute;
+    top:0px;
+    width:100%;
+    height:100%;
+    opacity:0;      /*Comment this line to try our mouse event based pause and resume. */
+    z-index:10; 
+ 
+}
+
+/*Comment this style to try our mouse event based pause and resume. */
+#pause-overlay:hover {
+    opacity:.8;     
+}
+#pause-overlay .pause{
+    font-size:120pt;
+    width:140px;
+    height:140px;
+    color:#4eaded;
+}
+.absolute-center {
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+}
+
+#play-video-overlay {
+    position:absolute;  
+    top:0px;
+    width:100%;
+    height:100%;
+    opacity:0;
+    z-index:10; 
+ 
+}
+#play-video-overlay:hover {
+    opacity:.6;     
+}
+#play-video-overlay .video {
+    font-size:80pt;
+    width:100px;
+    height:100px;
+    color:#4eaded;
+}
+/*Styles for workout page - end*/
+
+/*Animation effects*/
+div[ng-view] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+div[ng-view].ng-enter,
+div[ng-view].ng-leave {
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
+    transition: all 1s ease;
+}
+div[ng-view].ng-enter {
+    left: 100%;     /*initial css for view transition in*/
+}
+div[ng-view].ng-leave {
+    left: 0;        /*initial css for view transition out*/
+}
+div[ng-view].ng-enter-active {
+    left: 0;        /*final css for view transition in*/
+}
+div[ng-view].ng-leave-active {
+    left: -100%;    /*final css for view transition out*/
+}
+
+.video-image.ng-enter,
+.video-image.ng-move {
+    -webkit-animation: bounceIn 1s;
+    -moz-animation: bounceIn 1s;
+    -ms-animation: bounceIn 1s;
+    animation: bounceIn 1s;
+}
+.video-image.ng-leave {
+    -webkit-animation: bounceOut 1s;
+    -moz-animation: bounceOut 1s;
+    -ms-animation: bounceOut 1s;
+    animation: bounceOut 1s;
+}
+
+
+
+/*Animation effects - end*/

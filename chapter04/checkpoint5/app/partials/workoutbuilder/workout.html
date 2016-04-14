@@ -1,0 +1,86 @@
+﻿<div id="workout-container">
+    <div class="row">
+        <h2 class="col-sm-8 col-sm-offset-1">{{workout.title||'Workout Title'}} {{formWorkout.$dirty?'*':''}}
+            <span ng-show="canDeleteWorkout()" class="pull-right glyphicon glyphicon-trash text-danger" title="Delete Workout" ng-confirm="deleteWorkout()" ng-confirm-message="Are you sure you want to delete this workout ?"></span>
+        </h2>
+    </div>
+    <form class="row" name="formWorkout" novalidate>
+        <div id="exercises-list" class="col-sm-5 col-sm-offset-1">
+            <span name="exerciseCount" ng-model="workout.exercises.length"></span>
+            <div class="alert alert-danger" ng-show="formWorkout.exerciseCount.$dirty && formWorkout.exerciseCount.$error.count">
+                The workout should have at least one exercise!
+            </div>
+            <div ng-repeat="exercise in workout.exercises" class="exercise-item">
+                <div ng-include="'workout-exercise-tile'"></div>
+            </div>
+        </div>
+        <div id="workout-data" class="col-sm-3">
+            <div class="form-group row" ng-class="{'has-error':formWorkout.workoutName.$invalid}">
+                <label for="workout-name">Name:</label>
+                <input type="text" name="workoutName" class="form-control" id="workout-name" placeholder="Enter workout name. Must be unique." ng-model="workout.name" ng-pattern="/^[A-Za-z0-9]{1,15}$/" required>
+                <label ng-show="formWorkout.workoutName.$dirty && formWorkout.workoutName.$error.required" class="text-danger">Workout name is required and it should be unique.</label>
+                <label ng-show="formWorkout.workoutName.$dirty && formWorkout.workoutName.$error.pattern" class="text-danger">Only alpha numberic values are allowed in workout name with max length 15.</label>
+            </div>
+            <div class="form-group row" ng-class="{'has-error':formWorkout.title.$invalid}">
+                <label for="workout-title">Title:</label>
+                <input type="text" name="title" class="form-control" id="workout-title" placeholder="What would be the workout title?" ng-model="workout.title" ng-minlength="5" ng-maxlength="20" required>
+                <label ng-show="formWorkout.title.$dirty && formWorkout.title.$error.required" class="text-danger">Workout title is required.</label>
+                <label ng-show="formWorkout.title.$dirty && (formWorkout.title.$error.minlength || formWorkout.title.$error.maxlength)" class="text-danger">Title should be between 5 to 20 character long.</label>
+            </div>
+            <div class="form-group row">
+                <label for="workout-description">Description:</label>
+                <textarea name="description" class="form-control" id="workout-description" placeholder="Enter workout description." ng-model="workout.description"></textarea>
+            </div>
+            <div class="form-group row" ng-class="{'has-error':formWorkout.restBetweenExercise.$error.number}">
+                <label for="workout-rest">Rest Time (in seconds):</label>
+                <input type="number" name="restBetweenExercise" class="form-control" id="workout-rest" placeholder="Rest period between exercise in seconds." ng-model="workout.restBetweenExercise" min="1" ng-pattern="/^-?\d+$/" required>
+                <!--<label ng-show="formWorkout.restBetweenExercise.$dirty && formWorkout.restBetweenExercise.$error.required" class="text-danger">Time duration is required.</label>
+                <label ng-show="formWorkout.restBetweenExercise.$dirty && formWorkout.restBetweenExercise.$error.number" class="text-danger">Time duration should be numeric.</label>
+                <label ng-show="formWorkout.restBetweenExercise.$dirty && formWorkout.restBetweenExercise.$error.min" class="text-danger">Only positive integer value allowed.</label>
+                <label ng-show="formWorkout.restBetweenExercise.$dirty && formWorkout.restBetweenExercise.$error.pattern" class="text-danger">Only integer value allowed.</label>-->
+                <div ng-messages="formWorkout.restBetweenExercise.$error" ng-if="formWorkout.restBetweenExercise.$dirty">
+                    <label ng-message="required" class="text-danger">Time duration is required.</label>
+                    <label ng-message="number" class="text-danger">Time duration should be numeric.</label>
+                    <label ng-message="min" class="text-danger">Only positive integer value allowed.</label>
+                    <label ng-message="pattern" class="text-danger">Only integer value allowed.</label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label>Total Exercises:</label>
+                <p class="form-control-static badge">{{workout.exercises.length}}</p>
+            </div>
+            <div class="form-group row">
+                <label>Total Duration:</label>
+                <p class="form-control-static badge">{{workout.totalWorkoutDuration()|secondsToTime}}</p>
+            </div>
+            <div class="row">
+                <button class="btn pull-right btn-block" ng-class="{'btn-default':formWorkout.$valid,'btn-warning':!formWorkout.$valid}" ng-click="save()" 
+                        popover="{{formWorkout.$invalid ? 'The form has errors.' : null}}" popover-trigger="mouseenter">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/ng-template" id="workout-exercise-tile">
+    <div class="exercise tile">
+	    <div class="title">
+            {{exercise.details.title}}
+            <div class="pull-right" ng-click="removeExercise(exercise)"><span class="glyphicon glyphicon-trash"></span></div>
+        </div>
+        <div class="index"><span>{{$index+1}}</span></div>
+		<div class="main">
+			<div class="image">
+				<img ng-src="{{exercise.details.image ? exercise.details.image : '/img/running.png'}}"/>
+			</div>
+            <div class="details">
+                <select class="select-duration form-control" name="duration" ng-model="exercise.duration" ng-options="duration.value as duration.title for duration in durations">
+                </select>
+            </div>
+		</div>
+        <div class="order">
+            <button class="btn btn-info" ng-click="moveExerciseTo(exercise,0)"><span class="glyphicon glyphicon-upload"></span></button>
+            <button class="btn btn-info" ng-click="moveExerciseTo(exercise,$index-1)"><span class="glyphicon glyphicon-chevron-up"></span></button>
+            <button class="btn btn-info" ng-click="moveExerciseTo(exercise,$index+1)"><span class="glyphicon glyphicon-chevron-down"></span></button>
+            <button class="btn btn-info" ng-click="moveExerciseTo(exercise,workout.exercises.length-1)"><span class="glyphicon glyphicon-download"></span></button>
+        </div>
+    </div>
+</script>
